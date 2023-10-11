@@ -4,6 +4,8 @@ using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using TrippyGL;
 
+using static Simulation;
+
 namespace atomfg
 {
     class Program
@@ -52,6 +54,8 @@ namespace atomfg
 
             vertexBuffer  = new VertexBuffer<VertexPosition>(graphicsDevice, sphere, BufferUsage.StaticDraw);
             shaderProgram = SimpleShaderProgram.Create<VertexColor>(graphicsDevice);
+
+            Simulation.Simulate();
 
             Window_FramebufferResize(window.FramebufferSize);
         }
