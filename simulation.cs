@@ -104,7 +104,7 @@ class Simulation
         int m = 0; // magnetic quantum number
 
         int    gridSize  = 30;
-        double maxRadius = 0.1;
+        double maxRadius = 1;
 
         double[,] waveFunctionValues = new double[gridSize, gridSize];
         double    deltaRadius        = maxRadius / gridSize;
