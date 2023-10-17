@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from   mpl_toolkits.mplot3d import Axes3D
+from   matplotlib.widgets import Button, Slider
 
 HBAR = 1.0545718e-34  # planck's constant
 M_E  = 9.10938356e-31 # mass of an electron
@@ -70,8 +70,61 @@ def plot_hydrogen_wavefunction(n, l, m, threshold = 0.01):
 
     pd_threshold = prob_density[threshold_condition]
 
-    ax.scatter(x_threshold, y_threshold, z_threshold, 
-               c=pd_threshold, cmap='viridis', s=np.minimum((pd_threshold * 1000)**EF, 50))
+    ax_expo = plt.axes([0.25, 0.1, 0.65, 0.03])
+    expo_slider = Slider(
+        ax      = ax_expo,
+        label   = 'exponentiation factor',
+        valmin  = 0.0001,
+        valmax  = 10,
+        valinit = 3,
+    )
+
+    ax_thresh = plt.axes([0.25, 0.2, 0.65, 0.03])
+    thresh_slider = Slider(
+        ax      = ax_thresh,
+        label   = 'minimum threshold',
+        valmin  = 0.0001,
+        valmax  = 1,
+        valinit = threshold,
+    )
+
+    scatter = ax.scatter(x_threshold, y_threshold, z_threshold, 
+                        c = pd_threshold, cmap='viridis', s = np.minimum((pd_threshold * 1000) ** EF, 50))
+
+    last_threshold = threshold
+
+    def update(val):
+        nonlocal scatter
+        nonlocal last_threshold
+        nonlocal pd_threshold
+        nonlocal prob_density
+
+        global threshold
+
+        exponent  = expo_slider.val
+        threshold = thresh_slider.val
+        
+        if last_threshold == threshold:
+            scatter.set_sizes(np.minimum((pd_threshold * 1000) ** exponent, 50))
+            fig.canvas.draw_idle()
+        else:
+            threshold_condition = prob_density > threshold
+            pd_threshold = prob_density[threshold_condition]
+
+            # remove plot from 'scatter' and reinitialise data in it
+            ax.clear()
+
+            x_threshold = hydrogen_atom.xx[threshold_condition]
+            y_threshold = hydrogen_atom.yy[threshold_condition]
+            z_threshold = hydrogen_atom.zz[threshold_condition]
+
+            scatter = ax.scatter(x_threshold, y_threshold, z_threshold, 
+                                 c = pd_threshold, cmap='viridis', s = np.minimum((pd_threshold * 1000) ** exponent, 50))
+        
+        last_threshold = threshold
+
+    expo_slider.on_changed(update) # redraw scatterplot
+    thresh_slider.on_changed(update)
 
     plt.show()
 
