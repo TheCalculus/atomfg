@@ -6,9 +6,7 @@ from   matplotlib.widgets import Slider
 import sys
 
 if len(sys.argv) == 1:
-    HBAR = 1.0545718e-34  # planck's constant
-    M_E  = 9.10938356e-31 # mass of an electron
-    L    = 25             # grid size in all dimensions
+    L    = 50             # grid size in all dimensions
     EF   = 0.1            # exponentiation factor for point size in scatterplot
 
     HIGH_SPEED        = False     # default (0) -> AGG (1)
@@ -18,13 +16,11 @@ if len(sys.argv) == 1:
     # constraints: n > l
 
     n = 4  # principal quantum number
-    l = 2  # azimuthal quantum number
+    l = 0  # azimuthal quantum number
     m = 0  # magnetic quantum number
 else:
     print(sys.argv)
 
-    HBAR = float(sys.argv[1])
-    M_E  = float(sys.argv[2])
     L    = int(sys.argv[3])
     EF   = float(sys.argv[4])
 
