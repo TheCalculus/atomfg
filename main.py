@@ -3,14 +3,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 from   matplotlib.widgets import Slider
 
-HBAR = 1.0545718e-34  # planck's constant
-M_E  = 9.10938356e-31 # mass of an electron
-DT   = 1              # simulation timestep
-N    = 100            # number of timesteps
-L    = 25             # grid size in all dimensions
-EF   = 1              # exponentiation factor for point size in scatterplot
+import sys
 
-HIGH_SPEED = True     # default (0) -> AGG (1)
+if len(sys.argv) == 1:
+    HBAR = 1.0545718e-34  # planck's constant
+    M_E  = 9.10938356e-31 # mass of an electron
+    L    = 25             # grid size in all dimensions
+    EF   = 0.1            # exponentiation factor for point size in scatterplot
+
+    HIGH_SPEED        = False     # default (0) -> AGG (1)
+    INIT_VIEW_THETA_X = 21.5
+    INIT_VIEW_THETA_Y = 45
+
+    # constraints: n > l
+
+    n = 4  # principal quantum number
+    l = 2  # azimuthal quantum number
+    m = 0  # magnetic quantum number
+else:
+    print(sys.argv)
+
+    HBAR = float(sys.argv[1])
+    M_E  = float(sys.argv[2])
+    L    = int(sys.argv[3])
+    EF   = float(sys.argv[4])
+
+    HIGH_SPEED = bool(sys.argv[5])
+    
+    INIT_VIEW_THETA_X = float(sys.argv[6])
+    INIT_VIEW_THETA_Y = float(sys.argv[7])
+
+    n = int(sys.argv[8])
+    l = int(sys.argv[9])
+    m = int(sys.argv[10])
+
 
 if HIGH_SPEED:
     plt.switch_backend('Agg')
@@ -61,7 +87,7 @@ def plot_hydrogen_wavefunction(n, l, m, threshold = 0.01):
     fig = plt.figure()
     ax  = fig.add_subplot(111, projection='3d')
 
-    ax.view_init(20.5, 45)
+    ax.view_init(INIT_VIEW_THETA_X, INIT_VIEW_THETA_Y)
 
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
@@ -138,13 +164,7 @@ def plot_hydrogen_wavefunction(n, l, m, threshold = 0.01):
 
     plt.show() # won't do anything if HIGH_SPEED
 
-# constraints: n > l
-
-n = 4  # principal quantum number
-l = 2  # azimuthal quantum number
-m = 0  # magnetic quantum number
-
-plot_hydrogen_wavefunction(n, l, m, threshold = 0.0001)
+plot_hydrogen_wavefunction(n, l, m, threshold = 0.001)
 
 if HIGH_SPEED:
-    plt.savefig('foo.png')
+    plt.savefig(str(n) + str(l) + str(m))
